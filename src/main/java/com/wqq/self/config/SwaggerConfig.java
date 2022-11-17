@@ -13,17 +13,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.wqq.self.common.config;
+package com.wqq.self.config;
 
-import com.vnet.pid.utils.SpringContextHolder;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -39,16 +36,9 @@ import java.util.List;
 @EnableSwagger2
 public class SwaggerConfig {
 
-    @Value("${jwt.header}")
-    private String tokenHeader;
+    private String tokenHeader = "token";
 
-    @Value("${swagger.enabled}")
-    private Boolean enabled;
-
-    @Bean
-    public SpringContextHolder springContextHolder() {
-        return new SpringContextHolder();
-    }
+    private Boolean enabled = true;
 
     @Bean
     @SuppressWarnings("all")
@@ -60,10 +50,10 @@ public class SwaggerConfig {
                 .select()
                 .paths(PathSelectors.regex("^(?!/error).*"))
                 .paths(PathSelectors.any())
-                .build()
+                .build();
                 //添加登陆认证
-                .securitySchemes(securitySchemes())
-                .securityContexts(securityContexts());
+//                .securitySchemes(securitySchemes());
+//                .securityContexts(securityContexts());
     }
 
     private ApiInfo apiInfo() {
@@ -82,21 +72,21 @@ public class SwaggerConfig {
         return securitySchemes;
     }
 
-    private List<SecurityContext> securityContexts() {
-        //设置需要登录认证的路径
-        List<SecurityContext> securityContexts = new ArrayList<>();
-        // ^(?!auth).*$ 表示所有包含auth的接口不需要使用securitySchemes即不需要带token
-        // ^标识开始  ()里是一子表达式  ?!/auth表示匹配不是/auth的位置，匹配上则添加请求头，注意路径已/开头  .表示任意字符  *表示前面的字符匹配多次 $标识结束
-        securityContexts.add(getContextByPath());
-        return securityContexts;
-    }
+//    private List<SecurityContext> securityContexts() {
+//        //设置需要登录认证的路径
+//        List<SecurityContext> securityContexts = new ArrayList<>();
+//        // ^(?!auth).*$ 表示所有包含auth的接口不需要使用securitySchemes即不需要带token
+//        // ^标识开始  ()里是一子表达式  ?!/auth表示匹配不是/auth的位置，匹配上则添加请求头，注意路径已/开头  .表示任意字符  *表示前面的字符匹配多次 $标识结束
+//        securityContexts.add(getContextByPath());
+//        return securityContexts;
+//    }
 
-    private SecurityContext getContextByPath() {
-        return SecurityContext.builder()
-                .securityReferences(defaultAuth())
-                .operationSelector(o->o.requestMappingPattern().matches("^(?!/auth).*$"))
-                .build();
-    }
+//    private SecurityContext getContextByPath() {
+//        return SecurityContext.builder()
+//                .securityReferences(defaultAuth())
+//                .operationSelector(o->o.requestMappingPattern().matches("^(?!/auth).*$"))
+//                .build();
+//    }
 
     private List<SecurityReference> defaultAuth() {
         List<SecurityReference> securityReferences = new ArrayList<>();

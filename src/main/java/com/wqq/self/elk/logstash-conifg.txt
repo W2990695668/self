@@ -1,0 +1,32 @@
+input {
+#    stdin {
+#    }
+	file {
+		path => "E:/elk/test.log"
+        start_position => end
+		stat_interval => 1
+    }
+}
+filter{
+    grok{
+        match => {"message" => "%{DATA:date} %{TIME:time} %{IPV4:ip} %{NUMBER:user} %{WORD:operation}"}
+    }
+	geoip {
+        source => ["ip"]
+		target => "geoip"
+		fields => ["region_name", "city_name", "latitude", "longitude"]
+		database => "E:/elk/logstash-8.3.1/data/plugins/filter/geoip/GeoLite2-City_20220816/GeoLite2-City.mmdb"
+    }
+
+#	mutate {
+#		rename => ["geoip.geo.region_name", "geoip.geo.regionName"]
+#	}
+}
+output {
+#    stdout {
+#    }
+	elasticsearch {
+		hosts => ["http://localhost:9200"]
+		index => "pdc_operation"
+	}
+}
