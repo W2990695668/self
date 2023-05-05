@@ -19,6 +19,7 @@ import java.io.IOException;
 @Slf4j
 public class CommonServiceImpl {
     //修改一些 测试pull request2
+    //修改一些 测试pull request 我是29906
 
     public void getImageCode(HttpServletResponse response) throws IOException {
         CaptchaUtils.Captcha captcha = CaptchaUtils.create();
