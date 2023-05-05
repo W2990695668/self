@@ -18,6 +18,7 @@ import java.io.IOException;
 @Service
 @Slf4j
 public class CommonServiceImpl {
+    //修改一些 测试pull request
 
     public void getImageCode(HttpServletResponse response) throws IOException {
         CaptchaUtils.Captcha captcha = CaptchaUtils.create();
